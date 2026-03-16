@@ -1,12 +1,10 @@
 from sqlalchemy.orm import Session
 from app.model.classes import GymClass
 from app.schema.classes import GymClassResponse
-from fastapi import HTTPException, Depends
-from app.database import get_db
+from fastapi import HTTPException
 
 
-
-def get_classes(db: Session = Depends(get_db)):
+def get_classes(db: Session):
     classes = db.query(GymClass).all()
     result = []
     for c in classes:
@@ -30,8 +28,7 @@ def get_classes(db: Session = Depends(get_db)):
     return result
 
 
-
-def get_class(class_id: int, db: Session = Depends(get_db)):
+def get_class(class_id: int, db: Session):
     c = db.query(GymClass).filter(GymClass.id == class_id).first()
     if not c:
         raise HTTPException(status_code=404, detail="Class not found")

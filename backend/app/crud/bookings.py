@@ -2,11 +2,10 @@ from sqlalchemy.orm import Session
 from app.model.classes import GymClass
 from app.model.bookings import Booking
 from app.schema.bookings import BookingCreate
-from fastapi import HTTPException, Depends
-from app.database import get_db
+from fastapi import HTTPException
 
 
-def create_booking(booking: BookingCreate, db: Session = Depends(get_db)):
+def create_booking(booking: BookingCreate, db: Session):
     # Check if class exists
     gym_class = db.query(GymClass).filter(GymClass.id == booking.class_id).first()
     if not gym_class:
@@ -32,7 +31,7 @@ def create_booking(booking: BookingCreate, db: Session = Depends(get_db)):
     return db_booking
 
 
-def cancel_booking(booking_id: int, db: Session = Depends(get_db)):
+def cancel_booking(booking_id: int, db: Session):
     booking = db.query(Booking).filter(Booking.id == booking_id).first()
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found")
@@ -42,6 +41,6 @@ def cancel_booking(booking_id: int, db: Session = Depends(get_db)):
     return {"detail": "Booking cancelled"}
 
 
-def get_user_bookings(user_id: int, db: Session = Depends(get_db)):
+def get_user_bookings(user_id: int, db: Session):
     bookings = db.query(Booking).filter(Booking.user_id == user_id).all()
     return bookings
