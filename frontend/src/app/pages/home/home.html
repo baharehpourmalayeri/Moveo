@@ -1,7 +1,66 @@
-<div class="flex flex-col items-center justify-center h-full text-center p-8">
-  <h1 class="text-4xl font-bold mb-4">Welcome to Gymie!</h1>
-  <p class="text-lg mb-6">Book your classes, track points, and enjoy your workouts.</p>
-  <a routerLink="/booking" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded">
-    View Classes
-  </a>
+<div class="bg-gray-50 min-h-screen">
+  <section class="relative">
+    <img src="/home/1.jpg" alt="Landing Image" class="w-full h-100 object-cover" />
+
+    <div
+      class="absolute inset-0 flex flex-col justify-center items-center text-center bg-black/40 text-white px-6"
+    >
+      <h1 class="text-4xl font-bold mb-4">Welcome to Moveo</h1>
+      <p class="mb-6 max-w-md">Book classes, stay active, and earn rewards</p>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-6 mt-16">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold">Popular Workouts</h2>
+
+      <a routerLink="/classes" class="text-blue-500 hover:underline text-sm"> View all </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <img src="/yoga.jpg" alt="Yoga" class="w-full h-40 object-cover" />
+        <div class="p-4">
+          <h3 class="font-semibold text-lg">Yoga</h3>
+          <p class="text-gray-500 text-sm">Relax and improve flexibility</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <img src="/hiit.jpg" alt="HIIT" class="w-full h-40 object-cover" />
+        <div class="p-4">
+          <h3 class="font-semibold text-lg">HIIT</h3>
+          <p class="text-gray-500 text-sm">High intensity fat burning</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <img src="/pilates.jpg" alt="Pilates" class="w-full h-40 object-cover" />
+        <div class="p-4">
+          <h3 class="font-semibold text-lg">Pilates</h3>
+          <p class="text-gray-500 text-sm">Core strength and balance</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-6 mt-16">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold">Earn Rewards</h2>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow text-center mb-6">
+      <h2 class="text-lg font-semibold mb-2">Easy Booking</h2>
+      <p class="text-gray-500 text-sm">Reserve your spot in just a few clicks.</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow text-center mb-6">
+      <h2 class="text-lg font-semibold mb-2">Popular Sessions</h2>
+      <p class="text-gray-500 text-sm">Join Yoga, HIIT, Pilates and more.</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow text-center mb-6">
+      <h2 class="text-lg font-semibold mb-2">Earn Points</h2>
+      <p class="text-gray-500 text-sm">Stay active and get rewarded.</p>
+    </div>
+  </section>
 </div>

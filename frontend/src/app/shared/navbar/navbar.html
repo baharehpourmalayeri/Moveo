@@ -1,10 +1,68 @@
+<nav
+  class="p-4 flex justify-between items-center shadow-md transition-colors duration-300"
+  [ngClass]="darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'"
+>
+  <div class="flex items-center space-x-4">
+    <div class="relative w-40 flex items-center overflow-visible cursor-pointer" style="height: 0">
+      <img
+        [src]="darkMode ? logoSrc.light : logoSrc.dark"
+        alt="Moveo Logo"
+        class="absolute -top-18 h-36 w-auto object-contain"
+      />
+    </div>
 
-<nav class="bg-blue-600 text-white p-4 flex justify-between items-center">
-  <div class="font-bold text-xl">Gymie</div>
-  <div class="space-x-4">
-    <a routerLink="/" class="hover:underline">Home</a>
-    <a routerLink="/booking" class="hover:underline">Booking</a>
-    <a routerLink="/points" class="hover:underline">Points</a>
-    <a routerLink="/login" class="hover:underline">Login</a>
+    @for (link of links; track link.path) {
+      <a [routerLink]="link.path" [ngClass]="navBaseClass + ' ' + getClass(navItemClasses)">
+        {{ link.label }}
+      </a>
+    }
+  </div>
+
+  <div class="flex items-center space-x-4" #profileDropdownRef>
+    <div class="relative">
+      <button [ngClass]="profileBtnBase + ' ' + getClass(profileBtnClasses.button)">
+        <img src="/nav/profile.jpg" alt="Profile" [ngClass]="profileImgClass" />
+        <button [ngClass]="profileDropdownBtnClass" (click)="toggleProfileDropdown($event)">
+          ▼
+        </button>
+      </button>
+
+      @if (profileDropdownOpen) {
+        <div [ngClass]="dropdownBase + ' ' + getClass(profileBtnClasses.dropdown)">
+          @for (dropdownItem of dropdownItems; track dropdownItem.path) {
+            <a
+              [routerLink]="dropdownItem.path"
+              [ngClass]="dropdownItemBase + ' ' + getClass(dropdownItemHover)"
+            >
+              {{ dropdownItem.label }}
+            </a>
+          }
+          <button
+            (click)="logout()"
+            [ngClass]="
+              dropdownLogoutExtra + ' ' + dropdownItemBase + ' ' + getClass(dropdownItemHover)
+            "
+          >
+            Log Out
+          </button>
+        </div>
+      }
+    </div>
+
+    <button
+      (click)="toggleDarkMode()"
+      [ngClass]="toggleBtnBaseClass + ' ' + getClass(toggleBtnClasses.outer)"
+    >
+      <div
+        [ngClass]="toggleCircleBaseClass + ' ' + getClass(toggleBtnClasses.circle)"
+        [class.translate-x-10]="darkMode"
+      >
+        @if (!darkMode) {
+          <span>☀️</span>
+        } @else {
+          <span>🌙</span>
+        }
+      </div>
+    </button>
   </div>
 </nav>
