@@ -1,0 +1,49 @@
+<div class="flex items-center">
+  <div class="relative" #profileDropdownRef>
+    <button
+      class="flex items-center justify-between px-2 py-1 w-20 h-10 rounded-full shadow-sm transition-all duration-200"
+      [ngClass]="
+        darkMode
+          ? 'bg-gray-800 hover:bg-gray-700 text-white'
+          : 'bg-gray-100 hover:bg-gray-200 text-black'
+      "
+      (click)="toggleDropdown($event)"
+    >
+      <img
+        src="/nav/profile.jpg"
+        alt="Profile"
+        class="absolute top-0.5 left-0.5 rounded-full w-9 h-9"
+      />
+      <mat-icon
+        class="absolute top-0 right-2 text-sm focus:outline-none cursor-pointer translate-y-2.5"
+      >
+        expand_more
+      </mat-icon>
+    </button>
+
+    @if (profileDropdownOpen) {
+      <div
+        class="absolute right-0 mt-2 w-38 rounded-lg shadow-lg py-2 z-50"
+        [ngClass]="darkMode ? 'bg-gray-700 text-[#e0e0e0]' : 'bg-gray-200 text-black'"
+      >
+        @for (item of dropdownItems; track item.path) {
+          <a
+            [routerLink]="item.path"
+            class="block px-4 py-2 transition cursor-pointer"
+            [ngClass]="darkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-300'"
+          >
+            {{ item.label }}
+          </a>
+        }
+
+        <button
+          (click)="logout.emit()"
+          class="w-full text-left block px-4 py-2 transition cursor-pointer"
+          [ngClass]="darkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-300'"
+        >
+          Log Out
+        </button>
+      </div>
+    }
+  </div>
+</div>

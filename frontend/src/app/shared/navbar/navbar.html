@@ -5,64 +5,25 @@
   <div class="flex items-center space-x-4">
     <div class="relative w-40 flex items-center overflow-visible cursor-pointer" style="height: 0">
       <img
-        [src]="darkMode ? logoSrc.light : logoSrc.dark"
+        [src]="darkMode ? '/nav/logo-light.png' : '/nav/logo-dark.png'"
         alt="Moveo Logo"
         class="absolute -top-18 h-36 w-auto object-contain"
       />
     </div>
 
-    @for (link of links; track link.path) {
-      <a [routerLink]="link.path" [ngClass]="navBaseClass + ' ' + getClass(navItemClasses)">
-        {{ link.label }}
-      </a>
-    }
+    <app-nav-links [links]="links" [darkMode]="darkMode"></app-nav-links>
   </div>
 
-  <div class="flex items-center space-x-4" #profileDropdownRef>
-    <div class="relative">
-      <button [ngClass]="profileBtnBase + ' ' + getClass(profileBtnClasses.button)">
-        <img src="/nav/profile.jpg" alt="Profile" [ngClass]="profileImgClass" />
-        <button [ngClass]="profileDropdownBtnClass" (click)="toggleProfileDropdown($event)">
-          ▼
-        </button>
-      </button>
+  <div class="flex items-center space-x-4">
+    <app-profile-menu
+      [dropdownItems]="dropdownItems"
+      [darkMode]="darkMode"
+      (logout)="logout()"
+    ></app-profile-menu>
 
-      @if (profileDropdownOpen) {
-        <div [ngClass]="dropdownBase + ' ' + getClass(profileBtnClasses.dropdown)">
-          @for (dropdownItem of dropdownItems; track dropdownItem.path) {
-            <a
-              [routerLink]="dropdownItem.path"
-              [ngClass]="dropdownItemBase + ' ' + getClass(dropdownItemHover)"
-            >
-              {{ dropdownItem.label }}
-            </a>
-          }
-          <button
-            (click)="logout()"
-            [ngClass]="
-              dropdownLogoutExtra + ' ' + dropdownItemBase + ' ' + getClass(dropdownItemHover)
-            "
-          >
-            Log Out
-          </button>
-        </div>
-      }
-    </div>
-
-    <button
-      (click)="toggleDarkMode()"
-      [ngClass]="toggleBtnBaseClass + ' ' + getClass(toggleBtnClasses.outer)"
-    >
-      <div
-        [ngClass]="toggleCircleBaseClass + ' ' + getClass(toggleBtnClasses.circle)"
-        [class.translate-x-10]="darkMode"
-      >
-        @if (!darkMode) {
-          <span>☀️</span>
-        } @else {
-          <span>🌙</span>
-        }
-      </div>
-    </button>
+    <app-toggle-dark-mode
+      [darkMode]="darkMode"
+      (darkModeChange)="onToggleDarkMode($event)"
+    ></app-toggle-dark-mode>
   </div>
 </nav>

@@ -25,10 +25,3 @@ section {
   @apply transition-colors duration-300;
 }
 
-.card {
-  @apply bg-white text-gray-900 p-4 rounded-lg shadow-sm;
-}
-
-html.dark .card {
-  @apply bg-gray-700 text-gray-100 shadow-md;
-}
