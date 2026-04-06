@@ -51,7 +51,7 @@ html.dark .universal-card {
 }
 
 .universal-button {
-  @apply bg-[#bbbbbb] text-black hover:bg-[#afafaf];
+  @apply bg-[#bbbbbb] text-black rounded-full hover:bg-[#afafaf];
 }
 
 html.dark .universal-button {
@@ -64,4 +64,12 @@ html.dark .universal-button {
 
 html.dark .universal-line {
   @apply border-[#4b4b4b];
+}
+
+.universal-calendar {
+  @apply bg-[#f1f1f1] text-black;
+}
+
+html.dark .universal-calendar {
+  @apply bg-[#202020] text-[#dfdfdf];
 }

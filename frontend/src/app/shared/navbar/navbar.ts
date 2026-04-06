@@ -23,9 +23,10 @@ export class Navbar {
   ];
 
   dropdownItems = [
-    { label: 'My Account', path: '/profile' },
-    { label: 'Bookings', path: '/profile/bookings' },
-    { label: 'Favorites', path: '/profile/favorites' },
+    { label: 'My Account', path: '/user/account' },
+    { label: 'Bookings', path: '/user/bookings' },
+    { label: 'Favorites', path: '/user/favorites' },
+    { label: 'Logout', path: '/logout' },
   ];
 
   onToggleDarkMode(value: boolean) {

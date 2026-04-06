@@ -31,14 +31,14 @@
       @if (bookedSessions && bookedSessions.length > 0) {
         @for (session of bookedSessions; track session.id) {
           <div
-            class="mt-2 p-4 bg-green-100 text-green-800 rounded flex justify-between items-center"
+            class="mt-2 p-4 bg-green-100 text-green-800 rounded-xl flex justify-between items-center"
           >
             <div>
               Successfully booked <strong>{{ session.workoutTitle }}</strong> on
               {{ session.start | date: 'short' }}!
             </div>
             <button
-              class="universal-button px-4 py-1 rounded-full bg-red-500 text-white hover:bg-red-600"
+              class="universal-button px-2 py-1 cursor-pointer"
               (click)="cancelConfirmedBooking(session)"
             >
               Cancel Booking

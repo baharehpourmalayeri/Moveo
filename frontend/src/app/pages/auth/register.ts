@@ -9,18 +9,15 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './register.html',
 })
 export class Register {
-  name: string = '';
-  email: string = '';
-  password: string = '';
-  confirmPassword: string = '';
+  email = '';
+  password = '';
+  confirmPassword = '';
 
   register() {
     if (this.password !== this.confirmPassword) {
-      alert('Passwords do not match!');
+      alert("Passwords don't match!");
       return;
     }
-
-    console.log('Registering user:', this.name, this.email);
-    alert(`Registered user: ${this.name} (${this.email})`);
+    console.log('Register', this.email, this.password);
   }
 }

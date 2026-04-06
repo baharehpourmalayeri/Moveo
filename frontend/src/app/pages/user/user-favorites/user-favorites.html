@@ -1,0 +1,24 @@
+<div class="page-content w-200 mb-18">
+  <h2 class="text-2xl font-bold mb-4">My Favorites</h2>
+
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    @for (workout of workouts; track workout.id) {
+      <div class="relative rounded-xl overflow-hidden shadow-lg flex flex-col">
+        <img
+          [src]="workout.image"
+          alt="{{ workout.title }}"
+          class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+
+        <div class="universal-card p-4 flex flex-col justify-between flex-1">
+          <h3 class="text-lg font-bold">{{ workout.title }}</h3>
+          <p class="text-sm mt-1 line-clamp-2">{{ workout.description }}</p>
+        </div>
+
+        <div class="absolute top-2 right-2 z-10">
+          <app-favorite-toggle [id]="workout.id"></app-favorite-toggle>
+        </div>
+      </div>
+    }
+  </div>
+</div>

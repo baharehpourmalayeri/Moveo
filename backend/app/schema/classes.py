@@ -2,12 +2,11 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
-
 class GymClassResponse(BaseModel):
     id: int
     name: str
     trainer: str
-    training: str # Yoga, HIIT, etc.
+    training: str
     datetime: datetime
     capacity: int
     image: str | None = None

@@ -1,28 +1,38 @@
-<div class="px-4 py-28 max-w-md mx-auto">
-  <h1 class="text-2xl font-bold mb-4">Login</h1>
-  <form (ngSubmit)="login()">
-    <div class="mb-4">
-      <label class="block mb-1 font-medium">Email</label>
-      <input
-        type="email"
-        [(ngModel)]="email"
-        name="email"
-        class="w-full border px-3 py-2 rounded"
-        required
-      />
-    </div>
-    <div class="mb-4">
-      <label class="block mb-1 font-medium">Password</label>
-      <input
-        type="password"
-        [(ngModel)]="password"
-        name="password"
-        class="w-full border px-3 py-2 rounded"
-        required
-      />
-    </div>
-    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-      Login
-    </button>
-  </form>
+<div class="min-h-screen flex items-center justify-center">
+  <div class="max-w-md w-full p-8">
+    <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+
+    <form (ngSubmit)="login()" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Email</label>
+        <input
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          required
+          class="w-full border rounded-full px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Password</label>
+        <input
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          required
+          class="w-full border rounded-full px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+        />
+      </div>
+
+      <button type="submit" class="universal-button w-full py-2 transition cursor-pointer">
+        Login
+      </button>
+    </form>
+
+    <p class="mt-4 text-center text-sm">
+      Don’t have an account?
+      <a href="/register" class="text-green-800 hover:underline cursor-pointer">Register</a>
+    </p>
+  </div>
 </div>

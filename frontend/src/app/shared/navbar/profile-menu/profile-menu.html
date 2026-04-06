@@ -6,7 +6,7 @@
       (click)="toggleDropdown($event)"
     >
       <img
-        src="/nav/profile.jpg"
+        src="/assets/nav/profile.jpg"
         alt="Profile"
         class="absolute top-0.5 left-0.5 rounded-full w-9 h-9"
       />
@@ -31,14 +31,6 @@
             {{ item.label }}
           </a>
         }
-
-        <button
-          (click)="logout.emit()"
-          class="w-full text-left block px-4 py-2 transition cursor-pointer"
-          [ngClass]="darkMode ? 'hover:bg-[#2c2c2c]' : 'hover:bg-[#b5b5b5]'"
-        >
-          Log Out
-        </button>
       </div>
     }
   </div>

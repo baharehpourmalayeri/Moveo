@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { FavoriteService } from '../../core/services/favorite.service';
+import { WorkoutService } from '../../core/services/workout.service';
+
 
 @Component({
   selector: 'app-favorite-toggle',
@@ -27,15 +28,15 @@ export class FavoriteToggle {
   @Output() favoriteChange = new EventEmitter<boolean>();
   @Input() id!: string;
 
-  constructor(private favoriteService: FavoriteService) {}
+  constructor(private workoutService: WorkoutService) {}
 
   get isFavorite() {
-    return this.id ? this.favoriteService.isFavorite(this.id) : false;
+    return this.id ? this.workoutService.isFavorite(this.id) : false;
   }
 
   toggle(event?: MouseEvent) {
     event?.stopPropagation();
-    this.favoriteService.toggle(this.id);
+    this.workoutService.toggleFavorite(this.id);
     this.favoriteChange.emit(this.isFavorite);
   }
 }

@@ -8,7 +8,7 @@ class GymClass(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     trainer = Column(String)
-    training = Column(String)  # Yoga, HIIT, etc.
+    training = Column(String) 
     datetime = Column(DateTime)
     capacity = Column(Integer)
     image = Column(String, nullable=True)
