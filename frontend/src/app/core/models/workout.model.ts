@@ -15,4 +15,5 @@ export interface WorkoutSession {
   end: string;
   capacity: number;
   booked: number;
+  isBooked: boolean;
 }

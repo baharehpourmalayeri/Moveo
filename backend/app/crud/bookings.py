@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.model.classes import GymClass
+from app.model.workouts import Workout
 from app.model.bookings import Booking
 from app.schema.bookings import BookingCreate
 from fastapi import HTTPException
@@ -7,13 +7,14 @@ from fastapi import HTTPException
 
 def create_booking(booking: BookingCreate, db: Session):
     # Check if class exists
-    gym_class = db.query(GymClass).filter(GymClass.id == booking.class_id).first()
-    if not gym_class:
-        raise HTTPException(status_code=404, detail="Class not found")
+    workout = db.query(Workout).filter(
+        Workout.id == booking.workout_id).first()
+    if not workout:
+        raise HTTPException(status_code=404, detail="Workout not found")
 
     # Check if class is full
-    if len(gym_class.bookings) >= gym_class.capacity:
-        raise HTTPException(status_code=400, detail="Class is fully booked")
+    if len(workout.bookings) >= workout.capacity:
+        raise HTTPException(status_code=400, detail="Workout is fully booked")
 
     # Check if user already booked
     existing_booking = db.query(Booking).filter(
@@ -21,9 +22,10 @@ def create_booking(booking: BookingCreate, db: Session):
         Booking.class_id == booking.class_id
     ).first()
     if existing_booking:
-        raise HTTPException(status_code=400, detail="You already booked this class")
+        raise HTTPException(
+            status_code=400, detail="You already booked this workout")
 
-    #Create booking
+    # Create booking
     db_booking = Booking(user_id=booking.user_id, class_id=booking.class_id)
     db.add(db_booking)
     db.commit()

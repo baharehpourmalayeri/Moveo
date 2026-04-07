@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WorkoutList } from './workout-list/workout-list';
 import { WorkoutService } from '../../core/services/workout.service';
 import { MatIconModule } from '@angular/material/icon';
 import { Workout } from '../../core/models/workout.model';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-workouts-page',
@@ -13,19 +14,34 @@ import { Workout } from '../../core/models/workout.model';
   templateUrl: './workouts.html',
 })
 export class WorkoutsPage {
-  searchTerm = '';
+  _searchTerm = '';
   workouts: Workout[] = [];
 
-  constructor(private workoutService: WorkoutService) {}
+  constructor(
+    private workoutService: WorkoutService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
-  ngOnInit() {
-    this.workouts = this.workoutService.getAll();
+  get searchTerm() {
+    return this._searchTerm;
+  }
+  set searchTerm(value: string) {
+    this._searchTerm = value;
+    this.onSearchTermChange(value);
   }
 
-  filteredWorkouts(): Workout[] {
-    if (!this.searchTerm) return this.workouts;
-    return this.workouts.filter((w) =>
-      w.title.toLowerCase().includes(this.searchTerm.toLowerCase()),
-    );
+  onSearchTermChange(value: string) {
+    console.log('Search term changed:', value);
+    this.workoutService.getFilteredWorkouts(value).subscribe((workouts) => {
+      this.workouts = workouts;
+      this.cdr.detectChanges();
+    });
+  }
+
+  ngOnInit() {
+    this.workoutService.getAll().subscribe((workouts) => {
+      this.workouts = workouts;
+      this.cdr.detectChanges();
+    });
   }
 }

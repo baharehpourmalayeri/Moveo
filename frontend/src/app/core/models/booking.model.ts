@@ -1,9 +1,3 @@
-export interface GymClass {
-  name: string;
-  description: string;
-  capacity: number;
-  booked?: boolean;
-}
 
 export interface Booking {
   id: number;

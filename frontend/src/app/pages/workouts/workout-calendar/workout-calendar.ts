@@ -49,35 +49,35 @@ export class WorkoutCalendar implements OnInit, OnChanges {
     }
   }
   loadAvailableSessions() {
-    let allSessions: WorkoutSession[] = this.workoutScheduleService.getSchedule(this.workout);
+    this.workoutScheduleService.getSchedule(this.workout).subscribe((allSessions) => {
+      const events = allSessions.map((s) => {
+        const sessionId = s.id;
+        const isBooked = this.bookedSessions.find((bs) => bs.id === sessionId);
 
-    const events = allSessions.map((s) => {
-      const sessionId = s.id;
-      const isBooked = this.bookedSessions.find((bs) => bs.id === sessionId);
+        let title = '';
+        let backgroundColor = '';
 
-      let title = '';
-      let backgroundColor = '';
+        const spotsLeft = s.capacity - s.booked;
+        if (isBooked) {
+          title = `Your Booking: ${this.workout.title}`;
+          backgroundColor = 'blue';
+        } else {
+          title = `${this.workout.title} (${spotsLeft} spots left)`;
+          backgroundColor = spotsLeft === 0 ? 'red' : 'green';
+        }
 
-      const spotsLeft = s.capacity - s.booked;
-      if (isBooked) {
-        title = `Your Booking: ${this.workout.title}`;
-        backgroundColor = 'blue';
-      } else {
-        title = `${this.workout.title} (${spotsLeft} spots left)`;
-        backgroundColor = spotsLeft === 0 ? 'red' : 'green';
-      }
+        return {
+          id: sessionId,
+          title,
+          start: s.start,
+          end: s.end,
+          backgroundColor,
+          extendedProps: { ...s },
+        };
+      });
 
-      return {
-        id: sessionId,
-        title,
-        start: s.start,
-        end: s.end,
-        backgroundColor,
-        extendedProps: { ...s },
-      };
+      this.calendarOptions.events = events;
     });
-
-    this.calendarOptions.events = events;
   }
 
   handleEventClick(info: any) {

@@ -1,40 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Coach } from '../models/coach.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CoachService {
-  coaches: Coach[] = [
-    {
-      id: '1',
-      slug: 'alice-johansson',
-      name: 'Alice Johansson',
-      title: 'Yoga & Pilates Specialist',
-      bio: 'Alice makes yoga fun and energizing, guiding you to boost flexibility, strengthen your core, and find calm, all with a smile and personalized flows that keep every session exciting.',
-      image: '/assets/coach/3.png',
-    },
-    {
-      id: '2',
-      slug: 'oscar-lund',
-      name: 'Oscar Lund',
-      title: 'Crossfit & Strength Coach',
-      bio: 'Oscar creates functional strength training sessions that push your limits while emphasizing proper form, injury prevention, and steady progression. Each workout is tailored to help you grow stronger, safer, and more confident.',
-      image: '/assets/coach/1.jpg',
-    },
-    {
-      id: '3',
-      slug: 'linnea-sjoberg',
-      name: 'Linnea Sjöberg',
-      title: 'Boxing',
-      bio: 'Linnea combines expert boxing techniques with strength and agility training, helping clients build endurance, power, and confidence in every session. She tailors each workout to challenge you safely while keeping it fun and motivating.',
-      image: '/assets/coach/2.jpg',
-    },
-  ];
+  constructor(private http: HttpClient) {}
 
-  getAll(): Coach[] {
-    return this.coaches;
+  getAll(): Observable<Coach[]> {
+    return this.http.get<Coach[]>('http://127.0.0.1:8000/coaches/');
   }
 
-  getBySlug(slug: string): Coach | undefined {
-    return this.coaches.find((c) => c.slug === slug);
+  getBySlug(slug: string): Observable<Coach> {
+    return this.http.get<Coach>(`http://127.0.0.1:8000/coaches/${slug}`);
   }
 }

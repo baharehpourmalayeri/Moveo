@@ -5,6 +5,7 @@ import { Coach } from '../../../core/models/coach.model';
 import { CoachService } from '../../../core/services/coach.service';
 import { CoachScheduleService } from '../../../core/services/coach-schedule.service';
 import { CoachCalendar } from '../coach-calendar/coach-calendar';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-coach-detail',
@@ -22,11 +23,15 @@ export class CoachDetail {
     private route: ActivatedRoute,
     private coachService: CoachService,
     private coachScheduleService: CoachScheduleService,
+    private cdr: ChangeDetectorRef,
   ) {}
   ngOnInit() {
     const slug = this.route.snapshot.paramMap.get('slug');
     if (slug) {
-      this.coach = this.coachService.getBySlug(slug);
+      this.coachService.getBySlug(slug).subscribe((coach) => {
+        this.coach = coach;
+        this.cdr.detectChanges();
+      });
     }
     this.bookedSessions = this.coachScheduleService.getUserBookings(this.coach);
   }

@@ -12,5 +12,5 @@ export interface CoachSession {
   coachId: string;
   start: string;
   end: string;
-  bookedUser?: string;
+  isBooked: boolean;
 }

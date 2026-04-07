@@ -49,34 +49,34 @@ export class CoachCalendar implements OnInit, OnChanges {
     }
   }
   loadAvailableSessions() {
-    let allSessions: CoachSession[] = this.coachScheduleService.getSchedule(this.coach);
+    this.coachScheduleService.getSchedule(this.coach).subscribe((allSessions) => {
+      const events = allSessions.map((s) => {
+        const sessionId = s.id;
+        const isBooked = this.bookedSessions.find((bs) => bs.id === sessionId);
 
-    const events = allSessions.map((s) => {
-      const sessionId = s.id;
-      const isBooked = this.bookedSessions.find((bs) => bs.id === sessionId);
+        let title = '';
+        let backgroundColor = '';
 
-      let title = '';
-      let backgroundColor = '';
+        if (isBooked) {
+          title = `Your Booking: ${this.coach.name}`;
+          backgroundColor = 'blue';
+        } else {
+          title = this.coach.name;
+          backgroundColor = s.isBooked ? 'red' : 'green';
+        }
 
-      if (isBooked) {
-        title = `Your Booking: ${this.coach.name}`;
-        backgroundColor = 'blue';
-      } else {
-        title = this.coach.name;
-        backgroundColor = s.bookedUser ? 'red' : 'green';
-      }
+        return {
+          id: sessionId,
+          title,
+          start: s.start,
+          end: s.end,
+          backgroundColor,
+          extendedProps: { ...s },
+        };
+      });
 
-      return {
-        id: sessionId,
-        title,
-        start: s.start,
-        end: s.end,
-        backgroundColor,
-        extendedProps: { ...s },
-      };
+      this.calendarOptions.events = events;
     });
-
-    this.calendarOptions.events = events;
   }
 
   handleEventClick(info: any) {
@@ -100,7 +100,7 @@ export class CoachCalendar implements OnInit, OnChanges {
       return;
     }
 
-    if (session.bookedUser) {
+    if (session.isBooked) {
       alert('This coach session is already booked.');
       return;
     }

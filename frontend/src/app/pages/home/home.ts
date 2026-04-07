@@ -22,6 +22,8 @@ export class Home {
   constructor(private workoutService: WorkoutService) {}
 
   ngOnInit() {
-    this.topWorkouts = this.workoutService.getTop(3);
+    this.workoutService.getTop(3).subscribe((workouts) => {
+      this.topWorkouts = workouts;
+    });
   }
 }

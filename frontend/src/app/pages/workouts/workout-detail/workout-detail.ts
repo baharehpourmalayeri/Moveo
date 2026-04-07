@@ -6,6 +6,7 @@ import { Workout, WorkoutSession } from '../../../core/models/workout.model';
 import { FavoriteToggle } from '../../../shared/favorite/favorite-toggle';
 import { WorkoutScheduleService } from '../../../core/services/workout-schedule.service';
 import { WorkoutCalendar } from '../workout-calendar/workout-calendar';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-workout-detail',
@@ -15,33 +16,26 @@ import { WorkoutCalendar } from '../workout-calendar/workout-calendar';
 })
 export class WorkoutDetail {
   workout: Workout | undefined;
-  showCalendar: boolean = false;
-  bookingConfirmed: boolean = false;
   bookedSessions: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private workoutService: WorkoutService,
     private workoutScheduleService: WorkoutScheduleService,
+    private cdr: ChangeDetectorRef,
   ) {}
   ngOnInit() {
     const slug = this.route.snapshot.paramMap.get('slug');
     if (slug) {
-      this.workout = this.workoutService.getBySlug(slug);
+      this.workoutService.getBySlug(slug).subscribe((workout) => {
+        this.workout = workout;
+        this.cdr.detectChanges();
+      });
     }
     this.bookedSessions = this.workoutScheduleService.getUserBookings(this.workout);
   }
 
-  onFavoriteChange(isFav: boolean) {
-    if (this.workout) {
-      this.workout.isFavorite = isFav;
-    }
-  }
-
   onBookingConfirmed(session: any) {
-    this.bookingConfirmed = true;
-    this.showCalendar = false;
-
     const exists = this.bookedSessions.find((bs) => bs.id === session.id);
     if (!exists) this.bookedSessions.push(session);
   }
@@ -61,8 +55,6 @@ export class WorkoutDetail {
     this.bookedSessions = this.bookedSessions.filter((bs) => bs.id !== confirmedId);
 
     this.workoutScheduleService.cancelSession(confirmedId);
-
-    this.bookingConfirmed = false;
 
     this.onBookingCanceled(confirmedId);
   }

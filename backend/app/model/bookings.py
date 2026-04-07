@@ -3,12 +3,13 @@ from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
 
-
 class Booking(Base):
     __tablename__ = "bookings"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    class_id = Column(Integer, ForeignKey("classes.id"))
+    workout_id = Column(Integer, ForeignKey("workouts.id"))
+    coach_id = Column(Integer, ForeignKey("coaches.id"))
 
     user = relationship("User", back_populates="bookings")
-    gym_class = relationship("GymClass", back_populates="bookings")
+    workout = relationship("Workout", back_populates="bookings")
+    coach = relationship("Coach", back_populates="bookings")

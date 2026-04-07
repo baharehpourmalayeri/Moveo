@@ -14,12 +14,11 @@ class User(Base):
     favorites = relationship("Favorite", back_populates="user")
 
 
-
 class Favorite(Base):
     __tablename__ = "favorites"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    class_id = Column(Integer, ForeignKey("classes.id"))
+    workout_id = Column(Integer, ForeignKey("workouts.id"))
 
     user = relationship("User", back_populates="favorites")
-    gym_class = relationship("GymClass", back_populates="favorites")
+    workout = relationship("Workout", back_populates="favorites")

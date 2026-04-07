@@ -12,10 +12,7 @@
           <p class="universal-card text-sm">{{ workout.description }}</p>
         </div>
         <div>
-          <app-favorite-toggle
-            [id]="workout.id"
-            (favoriteChange)="workout.isFavorite = $event"
-          ></app-favorite-toggle>
+          <app-favorite-toggle [workout]="workout"></app-favorite-toggle>
         </div>
       </div>
     </div>
