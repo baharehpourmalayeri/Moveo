@@ -45,6 +45,12 @@ def get_user_workout_bookings(token_data: dict = Depends(verify_token), db: Sess
     return crud_bookings.get_user_workout_bookings(user_id, db)
 
 
+@router.get("/workouts/{workout_slug}", response_model=List[WorkoutBookingResponse])
+def get_user_workout_bookings_by_slug(workout_slug: str, token_data: dict = Depends(verify_token), db: Session = Depends(get_db)):
+    user_id = int(token_data["user_id"])
+    return crud_bookings.get_user_workout_bookings(user_id, db, workout_slug)
+
+
 @router.get("/coaches/", response_model=List[CoachBookingResponse])
 def get_user_coach_bookings(token_data: dict = Depends(verify_token), db: Session = Depends(get_db)):
     user_id = int(token_data["user_id"])

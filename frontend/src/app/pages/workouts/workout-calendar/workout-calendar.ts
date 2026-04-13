@@ -10,7 +10,7 @@ import {
 import { CalendarOptions } from '@fullcalendar/core';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import { Workout, WorkoutSession } from '../../../core/models/workout.model';
+import { BookedWorkoutSession, Workout } from '../../../core/models/workout.model';
 import { WorkoutScheduleService } from '../../../core/services/workout-schedule.service';
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -22,9 +22,9 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class WorkoutCalendar implements OnInit, OnChanges {
   @Input() workout!: Workout;
-  @Input() bookedSessions!: WorkoutSession[];
-  @Output() bookingConfirmed = new EventEmitter<WorkoutSession>();
-  @Output() bookingCanceled = new EventEmitter<string>();
+  @Input() bookedSessions!: BookedWorkoutSession[];
+  @Output() bookingConfirmed = new EventEmitter<BookedWorkoutSession>();
+  @Output() bookingCanceled = new EventEmitter<number>();
 
   calendarOptions: CalendarOptions = {
     initialView: 'timeGridWeek',
@@ -56,13 +56,12 @@ export class WorkoutCalendar implements OnInit, OnChanges {
     this.workoutScheduleService.getSchedule(this.workout.slug).subscribe((allSessions) => {
       const events = allSessions.map((s) => {
         const sessionId = s.id;
-        const isBooked = this.bookedSessions.find((bs) => bs.id === sessionId);
 
         let title = '';
         let backgroundColor = '';
 
         const spotsLeft = s.capacity - s.booked;
-        if (isBooked) {
+        if (s.isBooked) {
           title = `Your Booking: ${this.workout.title}`;
           backgroundColor = 'blue';
         } else {
@@ -75,6 +74,7 @@ export class WorkoutCalendar implements OnInit, OnChanges {
           title,
           start: s.start,
           end: s.end,
+          session: s,
           backgroundColor,
           extendedProps: { ...s },
         };
@@ -87,19 +87,22 @@ export class WorkoutCalendar implements OnInit, OnChanges {
 
   handleEventClick(info: any) {
     const event = info.event;
+    const session = event.extendedProps;
     const sessionId = event.id;
+    const workoutId = session.workout.id;
 
-    let session: WorkoutSession | undefined = this.workoutScheduleService.getSessionById(sessionId);
-
-    if (!session) return;
-
-    const alreadyBooked = this.bookedSessions.find((bs) => bs.id === sessionId);
+    const alreadyBooked = session.isBooked;
     if (alreadyBooked) {
+      const bookedSession: BookedWorkoutSession = this.bookedSessions.filter(
+        (bs) => (bs.session_id = sessionId),
+      )[0];
       const cancel = window.confirm(`You booked ${this.workout.title}. Cancel it?`);
       if (cancel) {
-        this.workoutScheduleService.cancelSession(sessionId);
-        this.bookingCanceled.emit(sessionId);
-        alert('Booking canceled!');
+        this.workoutScheduleService.cancelSession(bookedSession.id).subscribe((r) => {
+          this.cdr.detectChanges();
+          this.bookingCanceled.emit(bookedSession.id);
+          alert('Booking canceled!');
+        });
       }
       return;
     }
@@ -112,10 +115,13 @@ export class WorkoutCalendar implements OnInit, OnChanges {
     const confirmBooking = window.confirm(`Do you want to book ${this.workout.title}?`);
     if (!confirmBooking) return;
 
-    this.workoutScheduleService.bookSession(sessionId);
-
-    this.bookingConfirmed.emit({ ...session, id: sessionId });
-    this.loadAvailableSessions();
-    alert('Booked successfully!');
+    this.workoutScheduleService
+      .bookSession(workoutId, sessionId)
+      .subscribe((r: BookedWorkoutSession) => {
+        this.cdr.detectChanges();
+        this.bookingConfirmed.emit({ ...r });
+        this.loadAvailableSessions();
+        alert('Booked successfully!');
+      });
   }
 }

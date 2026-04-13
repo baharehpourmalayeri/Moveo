@@ -1,22 +1,43 @@
 <div class="page-content w-200 mb-18">
-  <h2 class="text-2xl font-bold mb-4">My Bookings</h2>
+  <h2 class="text-2xl font-bold mb-4">Upcoming Bookings</h2>
 
   <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-    @for (booking of bookings; track booking.id) {
+    @for (coachBooking of coachBookings; track coachBooking.id) {
       <div class="relative rounded-xl overflow-hidden shadow-lg flex flex-col">
         <img
-          [src]="booking.coach.image || '/assets/default-workout.jpg'"
-          alt="{{ booking.coach.title }}"
+          [src]="coachBooking.coach.image || '/assets/default-workout.jpg'"
+          alt="{{ coachBooking.coach.title }}"
           class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <div class="universal-card p-4 flex flex-col justify-between flex-1">
-          <h2 class="text-m font-bold">{{ booking.coach.title }}</h2>
-          <p>Coach: {{ booking.coach.name }}</p>
+          <h2 class="text-m font-bold">{{ coachBooking.coach.title }}</h2>
+          <p>Coach: {{ coachBooking.coach.name }}</p>
           <p class="text-gray-500 mt-1">
-            {{ booking.start | date: 'mediumDate' }}
+            {{ coachBooking.start | date: 'mediumDate' }}
           </p>
           <p class="text-gray-500">
-            From {{ booking.start | date: 'shortTime' }} to {{ booking.end | date: 'shortTime' }}
+            From {{ coachBooking.start | date: 'shortTime' }} to
+            {{ coachBooking.end | date: 'shortTime' }}
+          </p>
+        </div>
+      </div>
+    }
+    @for (workoutBooking of workoutBookings; track workoutBooking.id) {
+      <div class="relative rounded-xl overflow-hidden shadow-lg flex flex-col">
+        <img
+          [src]="workoutBooking.workout.image || '/assets/default-workout.jpg'"
+          alt="{{ workoutBooking.workout.title }}"
+          class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+        <div class="universal-card p-4 flex flex-col justify-between flex-1">
+          <h2 class="text-m font-bold">{{ workoutBooking.workout.title }}</h2>
+          <p>Workout: {{ workoutBooking.workout.title }}</p>
+          <p class="text-gray-500 mt-1">
+            {{ workoutBooking.start | date: 'mediumDate' }}
+          </p>
+          <p class="text-gray-500">
+            From {{ workoutBooking.start | date: 'shortTime' }} to
+            {{ workoutBooking.end | date: 'shortTime' }}
           </p>
         </div>
       </div>

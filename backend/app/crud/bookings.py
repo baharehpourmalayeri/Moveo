@@ -2,9 +2,11 @@ from sqlalchemy.orm import Session
 from app.model.workouts import Workout, WorkoutSession
 from app.model.coaches import Coach, CoachSession
 from app.schema.coaches import CoachBase
+from app.schema.workouts import WorkoutBase
 from app.model.bookings import Booking
-from app.schema.bookings import WorkoutBookingCreate, CoachBookingCreate, CoachBookingResponse
+from app.schema.bookings import WorkoutBookingCreate, CoachBookingCreate, CoachBookingResponse, WorkoutBookingResponse
 from fastapi import HTTPException
+from sqlalchemy import func
 
 
 def create_workout_booking(booking: WorkoutBookingCreate, user_id: int, db: Session):
@@ -40,11 +42,26 @@ def create_workout_booking(booking: WorkoutBookingCreate, user_id: int, db: Sess
     db_booking = Booking(user_id=user_id, workout_id=booking.workout_id,
                          workout_session_id=booking.workout_session_id)
     db.add(db_booking)
-    db.commit()
-    db.refresh(db_booking)
-    # Update workout session booked count
+
     workout_session.booked += 1
     db.commit()
+    db.refresh(db_booking)
+
+    return WorkoutBookingResponse(
+        id=db_booking.id,
+        session_id=workout_session.id,
+        workout=WorkoutBase(
+            id=workout.id,
+            slug=workout.slug,
+            title=workout.title,
+            description=workout.description,
+            image=workout.image,
+        ),
+        start=workout_session.start_date,
+        end=workout_session.end_date,
+        capacity=workout_session.capacity,
+        booked=workout_session.booked
+    )
 
 
 def create_coach_booking(booking: CoachBookingCreate, user_id: int, db: Session):
@@ -119,18 +136,46 @@ def cancel_coach_booking(booking_id: int, user_id: int, db: Session):
     return {"detail": "Booking cancelled"}
 
 
-def get_user_workout_bookings(user_id: int, db: Session):
+def get_user_workout_bookings(user_id: int, db: Session, workout_slug: str | None = None):
     bookings = db.query(Booking).filter(
         Booking.user_id == user_id,
-        Booking.workout_session_id != None
-    ).all()
-    return bookings
+        Booking.workout_session_id != None).join(WorkoutSession).filter(
+        WorkoutSession.start_date >= func.now()
+    )
+
+    if workout_slug:
+        bookings = bookings.join(
+            Workout).filter(Workout.slug == workout_slug)
+
+    bookings = bookings.all()
+    result = []
+    for b in bookings:
+        result.append(
+            WorkoutBookingResponse(
+                id=b.id,
+                session_id=b.workout_session.id,
+                workout=WorkoutBase(
+                    id=b.workout.id,
+                    slug=b.workout.slug,
+                    title=b.workout.title,
+                    description=b.workout.description,
+                    image=b.workout.image,
+                ),
+                start=b.workout_session.start_date,
+                end=b.workout_session.end_date,
+                capacity=b.workout_session.capacity,
+                booked=b.workout_session.booked
+            )
+        )
+    return result
 
 
 def get_user_coach_bookings(user_id: int, db: Session, coach_slug: str | None = None):
     bookings = db.query(Booking).filter(
         Booking.user_id == user_id,
-        Booking.coach_session_id != None)
+        Booking.coach_session_id != None).join(CoachSession).filter(
+        CoachSession.start_date >= func.now()
+    )
 
     if coach_slug:
         bookings = bookings.join(

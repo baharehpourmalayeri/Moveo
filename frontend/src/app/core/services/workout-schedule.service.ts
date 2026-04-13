@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Workout } from '../models/workout.model';
-import { WorkoutSession } from '../models/workout.model';
-import { Observable } from 'rxjs';
+import { Workout, WorkoutSession, BookedWorkoutSession } from '../models/workout.model';
+import { Observable, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class WorkoutScheduleService {
   private workoutSessionApiUrl = 'http://127.0.0.1:8000/workouts';
+  private workoutBookSessionApiUrl = 'http://127.0.0.1:8000/bookings';
 
   constructor(
     private http: HttpClient,
@@ -23,27 +23,42 @@ export class WorkoutScheduleService {
     );
   }
 
-  isSessionAvailable(sessionId: string): boolean {
-    return true;
-  }
-
-  bookSession(sessionId: string): boolean {
-    return true;
-  }
-
-  cancelSession(sessionId: string): boolean {
-    return true;
-  }
-
-  getSessionById(sessionId: string): WorkoutSession | undefined {
-    return undefined;
-  }
-
-  getUserBookings(workout?: Workout): WorkoutSession[] {
-    if (workout) {
-      return this.bookedSessions.filter((s) => s.workout.id === workout.id);
+  bookSession(workoutId: number, workoutSessionId: number): Observable<BookedWorkoutSession> {
+    const authOptions = this.getAuthOptions();
+    if (!authOptions.headers) {
+      return throwError(() => new Error('Authentication required'));
     }
-    return this.bookedSessions;
+    return this.http.post<BookedWorkoutSession>(
+      `${this.workoutBookSessionApiUrl}/workout`,
+      {
+        workout_id: workoutId,
+        workout_session_id: workoutSessionId,
+      },
+      authOptions,
+    );
+  }
+
+  cancelSession(bookingId: number): Observable<boolean> {
+    console.log(bookingId);
+    const authOptions = this.getAuthOptions();
+    if (!authOptions.headers) {
+      return throwError(() => new Error('Authentication required'));
+    }
+    return this.http.delete<boolean>(
+      `${this.workoutBookSessionApiUrl}/workout/${bookingId}`,
+      authOptions,
+    );
+  }
+
+  getUserBookings(workout?: Workout): Observable<BookedWorkoutSession[]> {
+    const authOptions = this.getAuthOptions();
+    if (!authOptions.headers) {
+      return throwError(() => new Error('Authentication required'));
+    }
+    return this.http.get<BookedWorkoutSession[]>(
+      `${this.workoutBookSessionApiUrl}/workouts/${workout ? workout.slug : ''}`,
+      authOptions,
+    );
   }
 
   private getAuthOptions(): { headers?: HttpHeaders } {

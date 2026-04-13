@@ -26,8 +26,7 @@
             <h2 class="text-2xl font-bold mb-4">Select a Session</h2>
             <div class="w-full overflow-auto">
               <app-workout-calendar
-                mode="workouts"
-                [workout]="workout"
+                [workout]="selectedWorkout"
                 [bookedSessions]="bookedSessions"
                 (bookingConfirmed)="onBookingConfirmed($event)"
                 (bookingCanceled)="onBookingCanceled($event)"
@@ -44,7 +43,7 @@
             class="mt-2 p-4 bg-green-100 text-green-800 rounded-xl flex justify-between items-center"
           >
             <div>
-              Successfully booked <strong>{{ session.workoutTitle }}</strong> on
+              Successfully booked <strong>{{ session.workout.title }}</strong> on
               {{ session.start | date: 'short' }}
             </div>
             <button

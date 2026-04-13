@@ -43,7 +43,9 @@ def get_coach(slug: str, db: Session):
 
 def get_sessions(slug: str, db: Session, user_id: int | None = None):
     sessions = db.query(CoachSession).join(
-        Coach).filter(Coach.slug == slug).all()
+        Coach).filter(Coach.slug == slug).filter(
+        CoachSession.start_date >= func.now()
+    ).all()
 
     booked_session_ids: set[int] = set()
     if user_id is not None:

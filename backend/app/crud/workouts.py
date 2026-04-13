@@ -67,7 +67,9 @@ def get_workout(slug: str, db: Session, user_id: int | None = None):
 
 def get_sessions(slug: str, db: Session,  user_id: int | None = None):
     sessions = db.query(WorkoutSession).join(
-        Workout).filter(Workout.slug == slug).all()
+        Workout).filter(Workout.slug == slug).filter(
+        WorkoutSession.start_date >= func.now()
+    ).all()
 
     booked_session_ids: set[int] = set()
     if user_id is not None:
