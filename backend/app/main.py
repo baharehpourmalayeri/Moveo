@@ -4,7 +4,7 @@ from app.routers import bookings, coaches, favorites, user, workouts
 from fastapi.middleware.cors import CORSMiddleware
 
 
-app = FastAPI(title="Gymie Booking API")
+app = FastAPI(title="Moveo Booking API")
 
 app.add_middleware(
     CORSMiddleware,
